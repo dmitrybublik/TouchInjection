@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TouchInjection.Services;
 
 namespace TouchInjection.App
 {
@@ -10,6 +7,10 @@ namespace TouchInjection.App
     {
         static void Main(string[] args)
         {
+            var executor = new TouchInjectionExecutor();
+            ITouchInjectionListener listener = new TouchInjectionListener(new KeyboardAndMouseProvider(), executor);
+            listener.Start();
+            Console.ReadLine();
         }
     }
 }
