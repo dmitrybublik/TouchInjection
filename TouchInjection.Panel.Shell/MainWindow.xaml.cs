@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
 using TouchInjection.Services;
 
@@ -11,12 +10,14 @@ namespace TouchInjection.Panel.Shell
     /// </summary>
     public partial class MainWindow
     {
-        private readonly TouchInjectionService _service;
+        private readonly TouchInjectionExecutor _executor;
 
         public MainWindow()
         {
             InitializeComponent();
-            _service = new TouchInjectionService();
+            _executor = new TouchInjectionExecutor();
+            ITouchInjectionListener listener = new TouchInjectionListener(new KeyboardAndMouseProvider(), _executor);
+            listener.Start();
         }
 
         private void UIElement_OnTouchDown(object sender, TouchEventArgs e)
@@ -47,18 +48,13 @@ namespace TouchInjection.Panel.Shell
         private async void ButtonPinchClick(object sender, RoutedEventArgs e)
         {
             await Task.Delay(1000);
-            await _service.PinchAsync(500, 500, 100);
+            await _executor.PinchZoomOutAsync(500, 500, 100, 1);
         }
 
         private async void ButtonZoomClick(object sender, RoutedEventArgs e)
         {
             await Task.Delay(1000);
-            await _service.ZoomAsync(500, 500, 100);
-        }
-
-        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            //_service.RegisterHotkeys(this, Keys.F11, Keys.F12);
-        }
+            await _executor.PinchZoomInAsync(500, 500, 100, 1);
+        }        
     }
 }

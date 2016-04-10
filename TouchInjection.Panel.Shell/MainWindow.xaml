@@ -7,8 +7,7 @@
         Title="MainWindow" 
         Height="350" 
         Width="525"
-        WindowState="Maximized"
-        Loaded="MainWindow_OnLoaded">
+        WindowState="Maximized">
     <Grid Background="BlueViolet"
           >
         <Grid.RowDefinitions>

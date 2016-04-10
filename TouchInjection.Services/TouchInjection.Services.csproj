@@ -49,8 +49,21 @@
     <Compile Include="Interop\TouchInjector.cs" />
     <Compile Include="Interop\TouchMask.cs" />
     <Compile Include="Interop\TouchPoint.cs" />
+    <Compile Include="ITouchInjectionExecutor.cs" />
+    <Compile Include="ITouchInjectionListener.cs" />
+    <Compile Include="ITouchInjectionProvider.cs" />
+    <Compile Include="KeyboardAndMouseProvider.cs" />
+    <Compile Include="KeyInfo.cs" />
+    <Compile Include="PinchZoomEventArgs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TouchInjectionService.cs" />
+    <Compile Include="TouchInjectionExecutor.cs" />
+    <Compile Include="TouchInjectionListener.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TouchInjection.GlobalHook\TouchInjection.GlobalHook.csproj">
+      <Project>{D4024C91-AB18-4DDC-8C43-AA38B4AF7D41}</Project>
+      <Name>TouchInjection.GlobalHook</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
