@@ -91,6 +91,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TouchInjection.GlobalHook\TouchInjection.GlobalHook.csproj">
+      <Project>{D4024C91-AB18-4DDC-8C43-AA38B4AF7D41}</Project>
+      <Name>TouchInjection.GlobalHook</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TouchInjection.Services\TouchInjection.Services.csproj">
       <Project>{6623F16C-EC9B-460B-9951-6B934B5E150B}</Project>
       <Name>TouchInjection.Services</Name>

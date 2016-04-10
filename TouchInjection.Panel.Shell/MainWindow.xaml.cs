@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using TouchInjection.GlobalHook;
 using TouchInjection.Services;
 
 namespace TouchInjection.Panel.Shell
@@ -15,8 +16,15 @@ namespace TouchInjection.Panel.Shell
         public MainWindow()
         {
             InitializeComponent();
+            var hook = new UserActivityHook();
             _executor = new TouchInjectionExecutor();
-            ITouchInjectionListener listener = new TouchInjectionListener(new KeyboardAndMouseProvider(), _executor);
+            ITouchInjectionListener listener =
+                new TouchInjectionListener(
+                    new TouchInjectionProvider(
+                        new MouseLocationProvider(hook),
+                        new KeyboardActionProvider(hook),
+                        hook),
+                    _executor);
             listener.Start();
         }
 

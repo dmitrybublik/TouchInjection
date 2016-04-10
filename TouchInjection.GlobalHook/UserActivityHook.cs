@@ -5,12 +5,37 @@ using System.Windows.Forms;
 
 namespace TouchInjection.GlobalHook
 {
+    public interface IUserActivityHook
+    {
+        /// <summary>
+        /// Occurs when the user moves the mouse, presses any mouse button or scrolls the wheel
+        /// </summary>
+        event MouseEventHandler OnMouseActivity;
+
+        /// <summary>
+        /// Occurs when the user releases a key
+        /// </summary>
+        event KeyEventHandler KeyUp;
+
+        /// <summary>
+        /// Installs both mouse and keyboard hooks and starts rasing events
+        /// </summary>
+        /// <exception cref="Win32Exception">Any windows problem.</exception>
+        void Start();
+
+        /// <summary>
+        /// Stops monitoring both mouse and keyboard events and rasing events.
+        /// </summary>
+        /// <exception cref="Win32Exception">Any windows problem.</exception>
+        void Stop();
+    }
+
     /// <summary>
     /// This class allows you to tap keyboard and mouse and / or to detect their activity even when an 
     /// application runes in background or does not have any user interface at all. This class raises 
     /// common .NET events with KeyEventArgs and MouseEventArgs so you can easily retrive any information you need.
     /// </summary>
-    public class UserActivityHook
+    public class UserActivityHook : IUserActivityHook
     {
         #region Windows structure definitions
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using TouchInjection.GlobalHook;
 using TouchInjection.Services;
 
 namespace TouchInjection.App
@@ -8,7 +9,14 @@ namespace TouchInjection.App
         static void Main(string[] args)
         {
             var executor = new TouchInjectionExecutor();
-            ITouchInjectionListener listener = new TouchInjectionListener(new KeyboardAndMouseProvider(), executor);
+            var hook = new UserActivityHook();
+            ITouchInjectionListener listener =
+                new TouchInjectionListener(
+                    new TouchInjectionProvider(
+                        new MouseLocationProvider(hook), 
+                        new KeyboardActionProvider(hook), 
+                        hook),
+                    executor);
             listener.Start();
             Console.ReadLine();
         }

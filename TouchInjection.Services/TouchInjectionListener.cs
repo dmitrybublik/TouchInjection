@@ -24,17 +24,17 @@
             _touchInjectionProvider.Stop();
         }
 
-        private async void TouchInjectionProviderOnPinchZoomInitiated(object sender, PinchZoomEventArgs pinchZoomEventArgs)
+        private async void TouchInjectionProviderOnPinchZoomInitiated(object sender, PinchZoomWithLocationEventArgs pinchZoomWithLocationEventArgs)
         {
-            if (pinchZoomEventArgs.IsPinchZoomIn)
+            if (pinchZoomWithLocationEventArgs.IsPinchZoomIn)
             {
-                await _touchInjectionExecutor.PinchZoomInAsync(pinchZoomEventArgs.X, pinchZoomEventArgs.Y,
-                    pinchZoomEventArgs.Distance, pinchZoomEventArgs.Speed);
+                await _touchInjectionExecutor.PinchZoomInAsync(pinchZoomWithLocationEventArgs.X, pinchZoomWithLocationEventArgs.Y,
+                    pinchZoomWithLocationEventArgs.Distance, pinchZoomWithLocationEventArgs.Speed);
             }
             else
             {
-                await _touchInjectionExecutor.PinchZoomOutAsync(pinchZoomEventArgs.X, pinchZoomEventArgs.Y,
-                   pinchZoomEventArgs.Distance, pinchZoomEventArgs.Speed);
+                await _touchInjectionExecutor.PinchZoomOutAsync(pinchZoomWithLocationEventArgs.X, pinchZoomWithLocationEventArgs.Y,
+                   pinchZoomWithLocationEventArgs.Distance, pinchZoomWithLocationEventArgs.Speed);
             }            
         }
     }

@@ -6,6 +6,6 @@ namespace TouchInjection.Services
     {
         void Start();
         void Stop();
-        event EventHandler<PinchZoomEventArgs> PinchZoomInitiated;
+        event EventHandler<PinchZoomWithLocationEventArgs> PinchZoomInitiated;
     }
 }
