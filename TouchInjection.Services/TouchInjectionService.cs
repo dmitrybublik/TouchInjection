@@ -1,18 +1,51 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TouchInjection.GlobalHook;
 using TouchInjection.Services.Interop;
 
 namespace TouchInjection.Services
 {
-    public sealed class TouchInjectionService
+    public interface ITouchInjectionService
     {
+        Task PinchZoomInAsync(int centerX, int centerY, int distance);
+        Task PinchZoomOutAsync(int centerX, int centerY, int distance);
+        bool RegisterPinchZoomHotKeys(Keys pinchZoomInKey, Keys pinchZoomOutKey);
+        bool RegisterHotkeys(Control control, Keys enterTouchModeKey, Keys exitTouchModeKey);
+    }
+
+    public sealed class TouchInjectionService : ITouchInjectionService
+    {
+        private readonly UserActivityHook _hook = new UserActivityHook();
+        private Keys _pinchZoomInKey;
+        private Keys _pinchZoomOutKey;
+        private int _mouseX = 500;
+        private int _mouseY = 500;
+        private int _distance = 100;
+
         public TouchInjectionService()
         {
-            bool s = TouchInjector.InitializeTouchInjection(); //initialize with default settings        
+            TouchInjector.InitializeTouchInjection();
+            _hook.KeyUp += HookOnKeyUp;               
+            _hook.Start();            
         }
 
-        public async Task PinchAsync(int centerX, int centerY, int distance)
+        private async void HookOnKeyUp(object sender, KeyEventArgs keyEventArgs)
+        {
+            if (keyEventArgs.KeyCode == _pinchZoomInKey && keyEventArgs.Alt == false && keyEventArgs.Control == false &&
+                keyEventArgs.Shift == false)
+            {
+                await PinchZoomOutAsync(_mouseX, _mouseY, _distance);
+            }
+
+            if (keyEventArgs.KeyCode == _pinchZoomOutKey && keyEventArgs.Alt == false && keyEventArgs.Control == false &&
+                keyEventArgs.Shift == false)
+            {
+                await PinchZoomInAsync(_mouseX, _mouseY, _distance);
+            }
+        }
+
+        public async Task PinchZoomOutAsync(int centerX, int centerY, int distance)
         {
             PointerTouchInfo[] contacts = new PointerTouchInfo[2];
             contacts[0] = MakePointerTouchInfo(centerX - distance, centerY, 2, 1);
@@ -39,7 +72,7 @@ namespace TouchInjection.Services
             bool success2 = TouchInjector.InjectTouchInput(2, contacts);
         }
 
-        public async Task ZoomAsync(int centerX, int centerY, int distance)
+        public async Task PinchZoomInAsync(int centerX, int centerY, int distance)
         {
             PointerTouchInfo[] contacts = new PointerTouchInfo[2];
             contacts[0] = MakePointerTouchInfo(centerX - distance, centerY, 2, 1);
@@ -64,6 +97,13 @@ namespace TouchInjection.Services
             contacts[1].PointerInfo.PointerFlags = PointerFlags.UP;
 
             bool success2 = TouchInjector.InjectTouchInput(2, contacts);
+        }
+
+        public bool RegisterPinchZoomHotKeys(Keys pinchZoomInKey, Keys pinchZoomOutKey)
+        {
+            _pinchZoomInKey = pinchZoomInKey;
+            _pinchZoomOutKey = pinchZoomOutKey;
+            return true;
         }
 
         public bool RegisterHotkeys(Control control, Keys enterTouchModeKey, Keys exitTouchModeKey)

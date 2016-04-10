@@ -47,17 +47,18 @@ namespace TouchInjection.Panel.Shell
         private async void ButtonPinchClick(object sender, RoutedEventArgs e)
         {
             await Task.Delay(1000);
-            await _service.PinchAsync(500, 500, 100);
+            await _service.PinchZoomOutAsync(500, 500, 100);
         }
 
         private async void ButtonZoomClick(object sender, RoutedEventArgs e)
         {
             await Task.Delay(1000);
-            await _service.ZoomAsync(500, 500, 100);
+            await _service.PinchZoomInAsync(500, 500, 100);
         }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
+            _service.RegisterPinchZoomHotKeys(Keys.F11, Keys.F12);
             //_service.RegisterHotkeys(this, Keys.F11, Keys.F12);
         }
     }

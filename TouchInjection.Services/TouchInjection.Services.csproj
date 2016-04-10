@@ -52,6 +52,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TouchInjectionService.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TouchInjection.GlobalHook\TouchInjection.GlobalHook.csproj">
+      <Project>{D4024C91-AB18-4DDC-8C43-AA38B4AF7D41}</Project>
+      <Name>TouchInjection.GlobalHook</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
