@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TouchInjectionLib", "TouchI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchInjection.Services", "TouchInjection.Services\TouchInjection.Services.csproj", "{6623F16C-EC9B-460B-9951-6B934B5E150B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchInjection.Panel.Shell", "TouchInjection.Panel.Shell\TouchInjection.Panel.Shell.csproj", "{2884557E-8F46-476E-8921-95F210757CBB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchInjection.Presentation.Shell", "TouchInjection.Panel.Shell\TouchInjection.Presentation.Shell.csproj", "{2884557E-8F46-476E-8921-95F210757CBB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TouchInjection.GlobalHook", "TouchInjection.GlobalHook\TouchInjection.GlobalHook.csproj", "{D4024C91-AB18-4DDC-8C43-AA38B4AF7D41}"
 EndProject

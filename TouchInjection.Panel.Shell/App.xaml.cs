@@ -1,15 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using LogoFX.Client.Bootstrapping;
+using LogoFX.Client.Bootstrapping.Adapters.SimpleContainer;
+using TouchInjection.Presentation.Shell.ViewModels;
 
-namespace TouchInjection.Panel.Shell
+namespace TouchInjection.Presentation.Shell
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App
     {
+        public App()
+        {
+            var bootstrapper =
+                new BootstrapperContainerBase<ShellViewModel, ExtendedSimpleContainerAdapter>(
+                    new ExtendedSimpleContainerAdapter());
+            bootstrapper.Initialize();
+        }
     }
 }
