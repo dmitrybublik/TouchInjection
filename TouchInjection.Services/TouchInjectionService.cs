@@ -1,24 +1,30 @@
-﻿using System.ComponentModel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Forms;
 using TouchInjection.GlobalHook;
 using TouchInjection.Services.Interop;
 
 namespace TouchInjection.Services
 {
+    public struct KeyInfo
+    {
+        public Keys KeyCode { get; set; }
+        public bool IsShiftPressed { get; set; }
+        public bool IsCtrlPressed { get; set; }
+        public bool IsAltPressed { get; set; }
+    }
+
     public interface ITouchInjectionService
     {
         Task PinchZoomInAsync(int centerX, int centerY, int distance);
         Task PinchZoomOutAsync(int centerX, int centerY, int distance);
-        bool RegisterPinchZoomHotKeys(Keys pinchZoomInKey, Keys pinchZoomOutKey);
-        bool RegisterHotkeys(Control control, Keys enterTouchModeKey, Keys exitTouchModeKey);
+        bool RegisterPinchZoomHotKeys(KeyInfo pinchZoomInKey, KeyInfo pinchZoomOutKey);        
     }
 
     public sealed class TouchInjectionService : ITouchInjectionService
     {
         private readonly UserActivityHook _hook = new UserActivityHook();
-        private Keys _pinchZoomInKey;
-        private Keys _pinchZoomOutKey;
+        private KeyInfo _pinchZoomInKeyInfo;
+        private KeyInfo _pinchZoomOutKeyInfo;
         private int _mouseX = 500;
         private int _mouseY = 500;
         private int _distance = 100;
@@ -26,23 +32,35 @@ namespace TouchInjection.Services
         public TouchInjectionService()
         {
             TouchInjector.InitializeTouchInjection();
-            _hook.KeyUp += HookOnKeyUp;               
+            _hook.KeyUp += HookOnKeyUp;
+            _hook.OnMouseActivity += HookOnOnMouseActivity;               
             _hook.Start();            
+        }
+
+        private void HookOnOnMouseActivity(object sender, MouseEventArgs mouseEventArgs)
+        {
+            _mouseX = mouseEventArgs.X;
+            _mouseY = mouseEventArgs.Y;
         }
 
         private async void HookOnKeyUp(object sender, KeyEventArgs keyEventArgs)
         {
-            if (keyEventArgs.KeyCode == _pinchZoomInKey && keyEventArgs.Alt == false && keyEventArgs.Control == false &&
-                keyEventArgs.Shift == false)
+            if (MatchKey(keyEventArgs, _pinchZoomInKeyInfo))
             {
                 await PinchZoomOutAsync(_mouseX, _mouseY, _distance);
             }
 
-            if (keyEventArgs.KeyCode == _pinchZoomOutKey && keyEventArgs.Alt == false && keyEventArgs.Control == false &&
-                keyEventArgs.Shift == false)
+            if (MatchKey(keyEventArgs, _pinchZoomOutKeyInfo))
             {
                 await PinchZoomInAsync(_mouseX, _mouseY, _distance);
             }
+        }
+
+        private static bool MatchKey(KeyEventArgs keyEventArgs, KeyInfo keyInfo)
+        {
+            return keyEventArgs.KeyCode == keyInfo.KeyCode && keyEventArgs.Alt == keyInfo.IsAltPressed
+                   && keyEventArgs.Control == keyInfo.IsCtrlPressed &&
+                   keyEventArgs.Shift == keyInfo.IsShiftPressed;
         }
 
         public async Task PinchZoomOutAsync(int centerX, int centerY, int distance)
@@ -51,7 +69,7 @@ namespace TouchInjection.Services
             contacts[0] = MakePointerTouchInfo(centerX - distance, centerY, 2, 1);
             contacts[1] = MakePointerTouchInfo(centerX + distance, centerY, 2, 2);
 
-            bool success = TouchInjector.InjectTouchInput(2, contacts);
+            TouchInjector.InjectTouchInput(2, contacts);
 
             contacts[0].PointerInfo.PointerFlags = PointerFlags.UPDATE | PointerFlags.INRANGE | PointerFlags.INCONTACT;
             contacts[1].PointerInfo.PointerFlags = PointerFlags.UPDATE | PointerFlags.INRANGE | PointerFlags.INCONTACT;
@@ -61,7 +79,7 @@ namespace TouchInjection.Services
             {
                 contacts[0].Move(+1, 0);
                 contacts[1].Move(-1, 0);
-                bool s = TouchInjector.InjectTouchInput(2, contacts);
+                TouchInjector.InjectTouchInput(2, contacts);
                 await Task.Delay(3);
             }
 
@@ -69,7 +87,7 @@ namespace TouchInjection.Services
             contacts[0].PointerInfo.PointerFlags = PointerFlags.UP;
             contacts[1].PointerInfo.PointerFlags = PointerFlags.UP;
 
-            bool success2 = TouchInjector.InjectTouchInput(2, contacts);
+            TouchInjector.InjectTouchInput(2, contacts);
         }
 
         public async Task PinchZoomInAsync(int centerX, int centerY, int distance)
@@ -78,7 +96,7 @@ namespace TouchInjection.Services
             contacts[0] = MakePointerTouchInfo(centerX - distance, centerY, 2, 1);
             contacts[1] = MakePointerTouchInfo(centerX + distance, centerY, 2, 2);
 
-            bool success = TouchInjector.InjectTouchInput(2, contacts);
+            TouchInjector.InjectTouchInput(2, contacts);
 
             contacts[0].PointerInfo.PointerFlags = PointerFlags.UPDATE | PointerFlags.INRANGE | PointerFlags.INCONTACT;
             contacts[1].PointerInfo.PointerFlags = PointerFlags.UPDATE | PointerFlags.INRANGE | PointerFlags.INCONTACT;
@@ -96,34 +114,14 @@ namespace TouchInjection.Services
             contacts[0].PointerInfo.PointerFlags = PointerFlags.UP;
             contacts[1].PointerInfo.PointerFlags = PointerFlags.UP;
 
-            bool success2 = TouchInjector.InjectTouchInput(2, contacts);
+            TouchInjector.InjectTouchInput(2, contacts);
         }
 
-        public bool RegisterPinchZoomHotKeys(Keys pinchZoomInKey, Keys pinchZoomOutKey)
+        public bool RegisterPinchZoomHotKeys(KeyInfo pinchZoomInKey, KeyInfo pinchZoomOutKey)
         {
-            _pinchZoomInKey = pinchZoomInKey;
-            _pinchZoomOutKey = pinchZoomOutKey;
+            _pinchZoomInKeyInfo = pinchZoomInKey;
+            _pinchZoomOutKeyInfo = pinchZoomOutKey;
             return true;
-        }
-
-        public bool RegisterHotkeys(Control control, Keys enterTouchModeKey, Keys exitTouchModeKey)
-        {
-            var enterTouchModeHotkey = new Hotkey();
-            enterTouchModeHotkey.KeyCode = enterTouchModeKey;
-            if (!enterTouchModeHotkey.GetCanRegister(control))
-            {
-                return false;
-            }
-
-            enterTouchModeHotkey.Pressed += OnEnterTouchModePressed;
-            enterTouchModeHotkey.Register(control);
-
-            return true;
-        }
-
-        private void OnEnterTouchModePressed(object sender, HandledEventArgs e)
-        {
-            
         }
 
         private PointerTouchInfo MakePointerTouchInfo(int x, int y, int radius, uint id, uint orientation = 90, uint pressure = 32000)

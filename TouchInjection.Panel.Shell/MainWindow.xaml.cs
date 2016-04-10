@@ -58,8 +58,19 @@ namespace TouchInjection.Panel.Shell
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            _service.RegisterPinchZoomHotKeys(Keys.F11, Keys.F12);
-            //_service.RegisterHotkeys(this, Keys.F11, Keys.F12);
+            _service.RegisterPinchZoomHotKeys(new KeyInfo
+            {
+                IsAltPressed = false,
+                IsShiftPressed = false,
+                IsCtrlPressed = false,
+                KeyCode = Keys.F11
+            }, new KeyInfo
+            {
+                IsAltPressed = false,
+                IsShiftPressed = false,
+                IsCtrlPressed = false,
+                KeyCode = Keys.F12
+            });            
         }
     }
 }
