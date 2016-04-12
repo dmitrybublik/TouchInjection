@@ -30,6 +30,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
@@ -53,6 +54,17 @@
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
                     Command="{Binding Path=ZoomOutCommand, Mode=OneWay}">
+            </Button>
+
+            <Button Grid.Row="0"
+                    Grid.Column="2"
+                    Width="80"
+                    Height="25"
+                    Content="Scroll"
+                    Margin="5"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left"
+                    Command="{Binding Path=TestScrollCommand, Mode=OneWay}">
             </Button>
         </Grid>
 

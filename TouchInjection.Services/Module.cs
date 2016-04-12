@@ -12,6 +12,8 @@ namespace TouchInjection.Services
             iocContainer.RegisterSingleton<ITouchInjectionProvider, TouchInjectionProvider>();
             iocContainer.RegisterSingleton<ITouchInjectionExecutor, TouchInjectionExecutor>();
             iocContainer.RegisterSingleton<ITouchInjectionListener, TouchInjectionListener>();
+
+            iocContainer.RegisterSingleton<IScrollProvider, ScrollProvider>();
         }
     }
 }
