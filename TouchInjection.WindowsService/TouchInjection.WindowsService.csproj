@@ -47,13 +47,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xaml" />
     <Reference Include="System.ServiceProcess" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ProcessExtensions.cs" />
@@ -82,16 +79,6 @@
     <EmbeddedResource Include="TouchInjectionService.resx">
       <DependentUpon>TouchInjectionService.cs</DependentUpon>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TouchInjection.GlobalHook\TouchInjection.GlobalHook.csproj">
-      <Project>{D4024C91-AB18-4DDC-8C43-AA38B4AF7D41}</Project>
-      <Name>TouchInjection.GlobalHook</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TouchInjection.Services\TouchInjection.Services.csproj">
-      <Project>{6623F16C-EC9B-460B-9951-6B934B5E150B}</Project>
-      <Name>TouchInjection.Services</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

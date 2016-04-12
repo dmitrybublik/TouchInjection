@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
 using System.Runtime.InteropServices;
 
-namespace TouchInjection.WindowsService
+namespace TouchInjection.App
 {
     public static class ProcessExtensions
     {
@@ -209,14 +207,13 @@ namespace TouchInjection.WindowsService
             return bResult;
         }
 
-        public static Process StartProcessAsCurrentUser(string appPath, string cmdLine = null, string workDir = null, bool visible = true)
+        public static IntPtr StartProcessAsCurrentUser(string appPath, string cmdLine = null, string workDir = null, bool visible = true)
         {
             var hUserToken = IntPtr.Zero;
             var startInfo = new STARTUPINFO();
             var procInfo = new PROCESS_INFORMATION();
             var pEnv = IntPtr.Zero;
             int iResultOfCreateProcessAsUser;
-            Process result;
 
             startInfo.cb = Marshal.SizeOf(typeof(STARTUPINFO));
 
@@ -252,7 +249,6 @@ namespace TouchInjection.WindowsService
                 }
 
                 iResultOfCreateProcessAsUser = Marshal.GetLastWin32Error();
-                result = Process.GetProcessById((int)procInfo.dwProcessId);
             }
             finally
             {
@@ -265,7 +261,7 @@ namespace TouchInjection.WindowsService
                 CloseHandle(procInfo.hProcess);
             }
 
-            return result;
+            return procInfo.hProcess;
         }
 
     }
