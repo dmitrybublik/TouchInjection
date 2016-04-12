@@ -2,32 +2,35 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Windows.Input;
 using Caliburn.Micro;
+using JetBrains.Annotations;
 using LogoFX.Client.Mvvm.Commanding;
 using TouchInjection.Services;
 
 namespace TouchInjection.Presentation.Shell.ViewModels
 {
-    class ShellViewModel : PropertyChangedBase
+    [UsedImplicitly]
+    public sealed class ShellViewModel : PropertyChangedBase
     {
-        private ObservableCollection<string> _logItems = new ObservableCollection<string>();
+        private readonly ObservableCollection<string> _logItems = 
+            new ObservableCollection<string>();
 
         private readonly ITouchInjectionExecutor _executor;
-        private readonly IScrollProvider _scrollProvider;
+        private readonly IMouseController _mouseController;
 
         public ShellViewModel(
             ITouchInjectionListener listener,
             ITouchInjectionExecutor executor,
-            IScrollProvider scrollProvider)
+            IMouseController mouseController)
         {
             listener.Start();
             _executor = executor;
-            _scrollProvider = scrollProvider;
+            _mouseController = mouseController;
         }
 
         private ICommand _zoomInCommand;
@@ -87,15 +90,30 @@ namespace TouchInjection.Presentation.Shell.ViewModels
                 return;
             }
 
-            var list = _scrollProvider.GetWindowHandleWithScroll(chromeApp.MainWindowHandle);
-            foreach (var item in list)
+            _mouseController.Location = new Point(200, 200);
+
+            for (int i = 0; i < 10; i++)
             {
-                var str = string.Format("#{0}, Pos = {1}, TrackPos = {2}, Page = {3}", 
-                    item.Item1, 
-                    item.Item2.nPos,
-                    item.Item2.nTrackPos, 
-                    item.Item2.nPage);
-                _logItems.Add(str);
+                await Task.Delay(50);
+                var p = _mouseController.Location;
+                p.Offset(2, 1);
+                _mouseController.Location = p;
+            }
+
+            Random rnd = new Random();
+
+            for (int i = 0; i < 5; ++i)
+            {
+                await Task.Delay(50);
+                _mouseController.HorizontalWheel(120*rnd.Next(-1, 2));
+            }
+
+            await Task.Delay(500);
+
+            for (int i = 0; i < 5; ++i)
+            {
+                await Task.Delay(50);
+                _mouseController.Wheel(120 * rnd.Next(-1, 2));
             }
         }
 

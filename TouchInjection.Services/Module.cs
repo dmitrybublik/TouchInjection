@@ -13,7 +13,7 @@ namespace TouchInjection.Services
             iocContainer.RegisterSingleton<ITouchInjectionExecutor, TouchInjectionExecutor>();
             iocContainer.RegisterSingleton<ITouchInjectionListener, TouchInjectionListener>();
 
-            iocContainer.RegisterSingleton<IScrollProvider, ScrollProvider>();
+            iocContainer.RegisterSingleton<IMouseController, MouseController>();
         }
     }
 }

@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Solid.Practices.IoC, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Solid.Practices.IoC.1.1.1\lib\portable-net45+wpa8+win8+MonoAndroid+MonoTouch+uap10.0\Solid.Practices.IoC.dll</HintPath>
       <Private>True</Private>
@@ -45,6 +49,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -52,26 +57,25 @@
     <Compile Include="Hotkey.cs" />
     <Compile Include="IActionProvider.cs" />
     <Compile Include="ILocationProvider.cs" />
+    <Compile Include="IMouseController.cs" />
     <Compile Include="Interop\ContactArea.cs" />
     <Compile Include="Interop\PointerButtonChangeType.cs" />
     <Compile Include="Interop\PointerFlags.cs" />
     <Compile Include="Interop\PointerInfo.cs" />
     <Compile Include="Interop\PointerInputType.cs" />
     <Compile Include="Interop\PointerTouchInfo.cs" />
-    <Compile Include="Interop\SCROLLINFO.cs" />
-    <Compile Include="Interop\ScrollInterop.cs" />
     <Compile Include="Interop\TouchFeedback.cs" />
     <Compile Include="Interop\TouchFlags.cs" />
     <Compile Include="Interop\TouchInjector.cs" />
     <Compile Include="Interop\TouchMask.cs" />
     <Compile Include="Interop\TouchPoint.cs" />
-    <Compile Include="IScrollProvider.cs" />
     <Compile Include="ITouchInjectionExecutor.cs" />
     <Compile Include="ITouchInjectionListener.cs" />
     <Compile Include="ITouchInjectionProvider.cs" />
     <Compile Include="KeyboardActionProvider.cs" />
     <Compile Include="Module.cs" />
-    <Compile Include="ScrollProvider.cs" />
+    <Compile Include="MouseController.cs" />
+    <Compile Include="MouseSimulator.cs" />
     <Compile Include="TouchInjectionProvider.cs" />
     <Compile Include="KeyInfo.cs" />
     <Compile Include="MouseLocationProvider.cs" />
