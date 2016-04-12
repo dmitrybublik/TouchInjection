@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace TouchInjection.Services.Interop
 {
@@ -26,7 +27,11 @@ namespace TouchInjection.Services.Interop
         public delegate bool Win32Callback(IntPtr hwnd, IntPtr lParam);
         [DllImport("user32.Dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool EnumChildWindows(IntPtr parentHandle, Win32Callback callback, IntPtr lParam);
+        private static extern bool EnumChildWindows(IntPtr parentHandle, Win32Callback callback, IntPtr lParam);
+
+        // Activate an application window.
+        [DllImport("USER32.DLL")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         public static int GetVScrollPos(IntPtr hWnd)
         {
@@ -37,7 +42,6 @@ namespace TouchInjection.Services.Interop
         {
             return GetScrollPos(hWnd, SB_HORZ);
         }
-
 
         /// <summary>
         /// Returns a list of child windows
@@ -87,7 +91,10 @@ namespace TouchInjection.Services.Interop
             SCROLLINFO si = new SCROLLINFO();
             si.fMask = SIF_ALL;
             si.cbSize = (uint)Marshal.SizeOf(si);
+
+            SetForegroundWindow(hWnd);
             GetScrollInfo(hWnd, SB_VERT, ref si);
+
             return si;
         }
 
@@ -106,13 +113,17 @@ namespace TouchInjection.Services.Interop
 
         public static IEnumerable<Tuple<IntPtr, SCROLLINFO>> GetHandlesWithScroll(IntPtr hWnd)
         {
+            List<Tuple<IntPtr, SCROLLINFO>> result = new List<Tuple<IntPtr, SCROLLINFO>>();
+
             GetScrollInfo(hWnd);
             var childrenWnd = GetAllChildrenWindows(hWnd);
             foreach (var childWnd in childrenWnd)
             {
                 var si = GetScrollInfo(childWnd);
+                result.Add(new Tuple<IntPtr, SCROLLINFO>(childWnd, si));
             }
-            return null;
+
+            return result;
         }
     }
 }

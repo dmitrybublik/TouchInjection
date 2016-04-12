@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using TouchInjection.Services.Interop;
 
 namespace TouchInjection.Services
@@ -15,10 +16,10 @@ namespace TouchInjection.Services
             return ScrollInterop.GetHScrollPos(handle);
         }
 
-        public IntPtr GetWindowHandleWithScroll(IntPtr mainWindowHandle)
+        public IEnumerable<Tuple<IntPtr, SCROLLINFO>> GetWindowHandleWithScroll(IntPtr mainWindowHandle)
         {
-            ScrollInterop.GetHandlesWithScroll(mainWindowHandle);
-            return mainWindowHandle;
+            var result = ScrollInterop.GetHandlesWithScroll(mainWindowHandle);
+            return result;
         }
     }
 }

@@ -74,7 +74,7 @@
                       ResizeDirection="Rows" />
 
         <Grid Grid.Row="2">
-            <ListBox x:Name="ListBox" />
+            <ListBox x:Name="LogItems" />
         </Grid>
     </Grid>
 </Window>

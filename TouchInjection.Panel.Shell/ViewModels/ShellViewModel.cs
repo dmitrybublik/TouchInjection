@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Input;
 using Caliburn.Micro;
 using LogoFX.Client.Mvvm.Commanding;
@@ -12,6 +15,8 @@ namespace TouchInjection.Presentation.Shell.ViewModels
 {
     class ShellViewModel : PropertyChangedBase
     {
+        private ObservableCollection<string> _logItems = new ObservableCollection<string>();
+
         private readonly ITouchInjectionExecutor _executor;
         private readonly IScrollProvider _scrollProvider;
 
@@ -82,7 +87,16 @@ namespace TouchInjection.Presentation.Shell.ViewModels
                 return;
             }
 
-            _scrollProvider.GetWindowHandleWithScroll(chromeApp.MainWindowHandle);
+            var list = _scrollProvider.GetWindowHandleWithScroll(chromeApp.MainWindowHandle);
+            foreach (var item in list)
+            {
+                var str = string.Format("#{0}, Pos = {1}, TrackPos = {2}, Page = {3}", 
+                    item.Item1, 
+                    item.Item2.nPos,
+                    item.Item2.nTrackPos, 
+                    item.Item2.nPage);
+                _logItems.Add(str);
+            }
         }
 
         private async void ZoomInAsync()
@@ -95,6 +109,11 @@ namespace TouchInjection.Presentation.Shell.ViewModels
         {
             await Task.Delay(1000);
             await _executor.PinchZoomOutAsync(500, 500, 100, 1);
+        }
+
+        public IEnumerable<string> LogItems
+        {
+            get { return _logItems; }
         }
     }
 }

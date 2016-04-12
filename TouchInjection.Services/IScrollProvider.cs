@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TouchInjection.Services.Interop;
 
 namespace TouchInjection.Services
 {
@@ -9,6 +10,6 @@ namespace TouchInjection.Services
 
         int GetHorizontalScrollPosition(IntPtr handle);
 
-        IntPtr GetWindowHandleWithScroll(IntPtr mainWindowHandle);
+        IEnumerable<Tuple<IntPtr, SCROLLINFO>> GetWindowHandleWithScroll(IntPtr mainWindowHandle);
     }
 }
